@@ -1,0 +1,42 @@
+<!-- postman_generator/templates/index.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Postman Assertion Generator</title>
+</head>
+<body>
+  <h2>Upload input.json and metadata.json</h2>
+  <form id="jsonForm">
+    <label>Input JSON:</label>
+    <input type="file" id="inputFile" accept=".json" required><br><br>
+    <label>Metadata JSON:</label>
+    <input type="file" id="metadataFile" accept=".json" required><br><br>
+    <button type="submit">Generate</button>
+  </form>
+
+  <h3>Generated Output (output.txt)</h3>
+  <textarea id="outputBox" rows="25" cols="120"></textarea>
+
+  <script>
+    document.getElementById('jsonForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const inputFile = document.getElementById('inputFile').files[0];
+      const metadataFile = document.getElementById('metadataFile').files[0];
+
+      const formData = new FormData();
+      formData.append('input', inputFile);
+      formData.append('metadata', metadataFile);
+
+      const response = await fetch('/generate', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.text();
+      document.getElementById('outputBox').value = result;
+    });
+  </script>
+</body>
+</html>
