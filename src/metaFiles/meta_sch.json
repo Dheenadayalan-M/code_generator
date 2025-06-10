@@ -1,0 +1,14 @@
+{
+
+  "data.stageDefinitionData": ["stageId"],
+  "data.stageDefinitionData.amountDueRecords": ["dueDate"],
+  "data.stageDefinitionData.amountDueRecords.componentList": ["ComponentType", "ComponentCode"],
+  "data.stageDefinitionData.aggregatedAmountDueRecords": ["year"],
+  "data.stageDefinitionData.aggregatedAmountDueRecords.componentTypes": ["componentCode"],
+  "data.periodicFeeRecords": ["componentCode", "dueDate"],
+ "data.aggregatedAmountDueRecords": ["year"],
+ "data.aggregatedAmountDueRecords.componentTypes": ["componentCode"],
+  "data.totalAmountDueRecords": ["totalInstallmentAmount"],
+  "data.totalAmountDueRecords.componentTypes": ["componentCode"],
+  "messages.codes": ["code"]
+}

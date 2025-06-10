@@ -1,0 +1,9 @@
+{
+  "data.AggregateOverdueBalances": ["totalOutstanding"],
+  "data.AggregateOverdueBalances.componentTypeList": ["ComponentType"],
+  "data.ArrearCompCodeDetailsResponseList": [],
+  "data.ComponentBalanceDetailsResponseList": ["componentCode"],
+  "data.PrincipalDatedBalanceResponseList": ["componentCode","valueDate"],
+  "data.TillDateAccruedInterest": ["componentCode","accruedInterestTillDate"],
+  "messages.codes": ["code"]
+}

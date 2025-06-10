@@ -1,0 +1,18 @@
+{
+  "data.stageDefinitionData": ["stageId","stageType"],
+  "data.stageDefinitionData.stageTerm": ["durationUnit"],
+  "data.partyData": ["partyId"],
+  "data.lendingAccountMasterData.accountConditionList": [],
+  "data.lendingAccountMasterData.term": ["durationUnit"],
+  "data.lendingAccountPrincipalPref": ["disbursementDate"],
+  "data.lendingAccountPrincipalPref.links": [],
+  "data.lendingAccountPrincipalPref.SettlementDetails": ["settlementMode"],
+  "data.lendingCommonSettlementData": [],
+  "data.interestPreferencesData": ["compCode","effectiveDate"],
+  "data.interestPreferencesData.spread": ["spreadCategory"],
+  "data.paymentInstructionData": [],
+  "data.accountAddressData": ["addressCode"],
+  "data.accountComponentDetailsData": ["componentCode"],
+  "data.lendingAmountDueData": ["component","dueDate"],
+  "messages.codes": ["code"]
+}
