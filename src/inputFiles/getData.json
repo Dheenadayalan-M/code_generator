@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "keyId": "e25008da-cbda-46a6-9964-dbc7b619b150",
+      "makerId": "VAMPELLYMAK",
+      "makerDateStamp": "2018-03-30 11:49:10",
+      "makerUTC": null,
+      "makerBranch": null,
+      "makerTimeZone": null,
+      "checkerId": "VAMPELLYCHK",
+      "checkerDateStamp": "2018-03-30 11:49:14",
+      "checkerUTC": null,
+      "checkerBranch": null,
+      "checkerTimeZone": null,
+      "modNo": 1,
+      "recordStatus": "O",
+      "authStatus": "A",
+      "onceAuth": "Y",
+      "doerRemarks": null,
+      "approverRemarks": null,
+      "links": [
+        {
+          "rel": "self",
+          "href": "http://ofss-mum-5084.snbomprshared2.gbucdsint02bom.oraclevcn.com:8018/cmc-branch-services/systemdates/e25008da-cbda-46a6-9964-dbc7b619b150"
+        }
+      ],
+      "branchCode": "AQ9",
+      "today": "2024-01-01",
+      "prevWorkingDay": "2018-03-30",
+      "nextWorkingDay": "2024-01-02"
+    }
+  ],
+  "paging": {
+    "totalResults": 1,
+    "links": {
+      "next": null,
+      "prev": null
+    }
+  }
+}

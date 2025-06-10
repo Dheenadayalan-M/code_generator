@@ -58,136 +58,148 @@ const CodeGenerator = () => {
       "error", "type", "language", "requestId", "httpStatusCode", "id", "iD", "args", "keyId"
   ]);
 
-  function getKeyPathString(path) {
-    return path.join(".");
-  };
+  // function getKeyPathString(path) {
+  //   return path.join(".");
+  // };
 
-  function getPrimaryKeysForPath(metadata, path) {
-    return metadata[getKeyPathString(path)] || [];
-  };
+  // function getPrimaryKeysForPath(metadata, path) {
+  //   return metadata[getKeyPathString(path)] || [];
+  // };
 
-  function generateIndexVariable() {
-    return `i${loopIndexCounter++}`;
-  };
+  // function generateIndexVariable() {
+  //   return `i${loopIndexCounter++}`;
+  // };
 
-  function generateVariableName(path) {
-    return path[path.length - 1];
-  };
+  // function generateVariableName(path) {
+  //   return path[path.length - 1];
+  // };
 
-  function formatValue(value) {
-    return JSON.stringify(value);
-  };
+  // function formatValue(value) {
+  //   return JSON.stringify(value);
+  // };
 
-  function generatePrimaryKeyCondition(itemVar, pk) {
-    return Object.entries(pk)
-      .map(([k, v]) => `${itemVar}.${k} == ${formatValue(v)}`)
-      .join(" && ");
-  };
+  // function generatePrimaryKeyCondition(itemVar, pk) {
+  //   return Object.entries(pk)
+  //     .map(([k, v]) => `${itemVar}.${k} == ${formatValue(v)}`)
+  //     .join(" && ");
+  // };
 
-  function generateAssertions(output, obj, varPrefix, indent) {
-    for (const [key, value] of Object.entries(obj)) {
-      if (SKIP_KEYS.has(key) || typeof value === "object") continue;
-        output.push(`${indent}pm.expect(${varPrefix}.${key}).to.eql(${formatValue(value)});`);
-    }
-  };
+  // function generateAssertions(output, obj, varPrefix, indent) {
+  //   for (const [key, value] of Object.entries(obj)) {
+  //     if (SKIP_KEYS.has(key) || typeof value === "object") continue;
+  //       output.push(`${indent}pm.expect(${varPrefix}.${key}).to.eql(${formatValue(value)});`);
+  //   }
+  // };
 
-  function processNode(output, node, metadata, path, parentVars, parentLoopIndex, parentIsArray) {
-    const indentLevel = parentVars.length + 1;
-    const indent = "    ".repeat(indentLevel);
+  // function processNode(output, node, metadata, path, parentVars, parentLoopIndex, parentIsArray) {
+  //   const indentLevel = parentVars.length + 1;
+  //   const indent = "    ".repeat(indentLevel);
 
-    if (Array.isArray(node) && node.length > 0) {
-      const varName = generateVariableName(path);
-      const matchVar = `${varName}MatchCount`;
-      const loopIndex = generateIndexVariable();
-      const parentAccess = parentIsArray ? `${parentVars[parentVars.length - 1]}[${parentLoopIndex}]` : parentVars[parentVars.length - 1];
-      const fullVar = `${parentAccess}.${varName}`;
+  //   if (Array.isArray(node) && node.length > 0) {
+  //     const varName = generateVariableName(path);
+  //     const matchVar = `${varName}MatchCount`;
+  //     const loopIndex = generateIndexVariable();
+  //     const parentAccess = parentIsArray ? `${parentVars[parentVars.length - 1]}[${parentLoopIndex}]` : parentVars[parentVars.length - 1];
+  //     const fullVar = `${parentAccess}.${varName}`;
 
-      output.push(`${indent}var ${varName} = ${fullVar};`);
-      output.push(`${indent}let ${matchVar} = 0;`);
-      output.push(`${indent}for (var ${loopIndex} = 0; ${loopIndex} < ${varName}.length; ${loopIndex}++) {`);
+  //     output.push(`${indent}var ${varName} = ${fullVar};`);
+  //     output.push(`${indent}let ${matchVar} = 0;`);
+  //     output.push(`${indent}for (var ${loopIndex} = 0; ${loopIndex} < ${varName}.length; ${loopIndex}++) {`);
 
-      const pks = getPrimaryKeysForPath(metadata, path);
-      const seenConditions = new Set();
+  //     const pks = getPrimaryKeysForPath(metadata, path);
+  //     const seenConditions = new Set();
 
-      for (const item of node) {
-        if (typeof item !== "object" || Array.isArray(item)) continue;
+  //     for (const item of node) {
+  //       if (typeof item !== "object" || Array.isArray(item)) continue;
 
-        const pk = Object.fromEntries(Object.entries(item).filter(([k]) => pks.includes(k)));
-        if (Object.keys(pk).length === 0) continue;
+  //       const pk = Object.fromEntries(Object.entries(item).filter(([k]) => pks.includes(k)));
+  //       if (Object.keys(pk).length === 0) continue;
 
-        const condition = generatePrimaryKeyCondition(`${varName}[${loopIndex}]`, pk);
-        if (seenConditions.has(condition)) continue;
-        seenConditions.add(condition);
+  //       const condition = generatePrimaryKeyCondition(`${varName}[${loopIndex}]`, pk);
+  //       if (seenConditions.has(condition)) continue;
+  //       seenConditions.add(condition);
 
-        output.push(`${indent}    if (${condition}) {`);
-        generateAssertions(output, item, `${varName}[${loopIndex}]`, indent + "        ");
-        for (const [k, v] of Object.entries(item)) {
-          if (typeof v === "object") {
-            processNode(output, v, metadata, [...path, k], [...parentVars, varName], loopIndex, true);
-          }
-        }
-        output.push(`${indent}        ${matchVar}++;`);
-        output.push(`${indent}    }`);
-      }
-      output.push(`${indent}}`);
-      output.push(`${indent}pm.test("Match (${matchVar}).to.eql(${varName}.length) Matching?", () => {`);
-      output.push(`${indent}    pm.expect(${matchVar}).to.eql(${varName}.length);`);
-      output.push(`${indent}});`);
-    } else if (typeof node === "object" && node !== null) {
-        const varName = generateVariableName(path);
-        const parentAccess = parentIsArray ? `${parentVars[parentVars.length - 1]}[${parentLoopIndex}]` : parentVars[parentVars.length - 1];
-        const fullVar = `${parentAccess}.${varName}`;
+  //       output.push(`${indent}    if (${condition}) {`);
+  //       generateAssertions(output, item, `${varName}[${loopIndex}]`, indent + "        ");
+  //       for (const [k, v] of Object.entries(item)) {
+  //         if (typeof v === "object") {
+  //           processNode(output, v, metadata, [...path, k], [...parentVars, varName], loopIndex, true);
+  //         }
+  //       }
+  //       output.push(`${indent}        ${matchVar}++;`);
+  //       output.push(`${indent}    }`);
+  //     }
+  //     output.push(`${indent}}`);
+  //     output.push(`${indent}pm.test("Match (${matchVar}).to.eql(${varName}.length) Matching?", () => {`);
+  //     output.push(`${indent}    pm.expect(${matchVar}).to.eql(${varName}.length);`);
+  //     output.push(`${indent}});`);
+  //   } else if (typeof node === "object" && node !== null) {
+  //       const varName = generateVariableName(path);
+  //       const parentAccess = parentIsArray ? `${parentVars[parentVars.length - 1]}[${parentLoopIndex}]` : parentVars[parentVars.length - 1];
+  //       const fullVar = `${parentAccess}.${varName}`;
 
-        output.push(`${indent}var ${varName} = ${fullVar};`);
-        generateAssertions(output, node, varName, indent);
+  //       output.push(`${indent}var ${varName} = ${fullVar};`);
+  //       generateAssertions(output, node, varName, indent);
 
-        for (const [key, value] of Object.entries(node)) {
-          if (typeof value === "object") {
-            processNode(output, value, metadata, [...path, key], [...parentVars, varName], parentLoopIndex, false);
-          }
-        }
-    }
-  };
+  //       for (const [key, value] of Object.entries(node)) {
+  //         if (typeof value === "object") {
+  //           processNode(output, value, metadata, [...path, key], [...parentVars, varName], parentLoopIndex, false);
+  //         }
+  //       }
+  //   }
+  // };
 
   const handleGeneratePostScript = async () => {
     try {
       const inputJson = JSON.parse(jsonInput);
       const metadata = JSON.parse(jsonMetaInput); 
-      alert(inputJson);
-      alert(metadata);
-      loopIndexCounter = 0;
-      const output = [];
-
-      for (const [topKey, topValue] of Object.entries(inputJson)) {
-        if (Array.isArray(topValue) && topValue.length > 0) {
-          const varName = topKey;
-          const topIndex = generateIndexVariable();
-          output.push(`var ${varName} = pm.response.json().${varName};`);
-          output.push(`pm.expect(${varName}.length).to.eql(${topValue.length});`);
-          output.push(`for (var ${topIndex} = 0; ${topIndex} < ${varName}.length; ${topIndex}++) {`);
-          generateAssertions(output, topValue[0], `${varName}[${topIndex}]`, "    ");
-          for (const [key, value] of Object.entries(topValue[0])) {
-            if (typeof value === "object") {
-              processNode(output, value, metadata, [topKey, key], [varName], topIndex, true);
-            }
-          }
-          output.push("}");
-        } else if (typeof topValue === "object" && topValue !== null) {
-          const varName = topKey;
-          output.push(`var ${varName} = pm.response.json().${varName};`);
-          generateAssertions(output, topValue, varName, "");
-          for (const [key, value] of Object.entries(topValue)) {
-            if (typeof value === "object") {
-              processNode(output, value, metadata, [topKey, key], [varName], "", false);
-            }
-          }
-        } else {
-          output.push(`pm.expect(pm.response.json().${topKey}).to.eql(${formatValue(topValue)});`);
-        }
+      // code to generate script using python call
+      var apiData = {
+        "jsonInput" : JSON.stringify(inputJson),
+        "jsonMetaInput" : JSON.stringify(metadata)
       }
-      alert(output);
-      setJsonPostOutput(output);
-      return output.join("\n");
+      const response = await fetch('http://127.0.0.1:5000/generateFromReact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(apiData)
+      });
+
+      const result = await response.text();
+
+      // code to generate script using function
+      // loopIndexCounter = 0;
+      // const output = [];
+
+      // for (const [topKey, topValue] of Object.entries(inputJson)) {
+      //   if (Array.isArray(topValue) && topValue.length > 0) {
+      //     const varName = topKey;
+      //     const topIndex = generateIndexVariable();
+      //     output.push(`var ${varName} = pm.response.json().${varName};`);
+      //     output.push(`pm.expect(${varName}.length).to.eql(${topValue.length});`);
+      //     output.push(`for (var ${topIndex} = 0; ${topIndex} < ${varName}.length; ${topIndex}++) {`);
+      //     generateAssertions(output, topValue[0], `${varName}[${topIndex}]`, "    ");
+      //     for (const [key, value] of Object.entries(topValue[0])) {
+      //       if (typeof value === "object") {
+      //         processNode(output, value, metadata, [topKey, key], [varName], topIndex, true);
+      //       }
+      //     }
+      //     output.push("}");
+      //   } else if (typeof topValue === "object" && topValue !== null) {
+      //     const varName = topKey;
+      //     output.push(`var ${varName} = pm.response.json().${varName};`);
+      //     generateAssertions(output, topValue, varName, "");
+      //     for (const [key, value] of Object.entries(topValue)) {
+      //       if (typeof value === "object") {
+      //         processNode(output, value, metadata, [topKey, key], [varName], "", false);
+      //       }
+      //     }
+      //   } else {
+      //     output.push(`pm.expect(pm.response.json().${topKey}).to.eql(${formatValue(topValue)});`);
+      //   }
+      // }
+
+      alert("✅ MetaData generated!");
+      setJsonPostOutput(result);
     } catch (err) {
       console.error("Failed to fetch metadata", err);
     }
@@ -284,8 +296,8 @@ const CodeGenerator = () => {
           <label>📤 Postman Script Output</label>
           <textarea
             rows={15}
-            value={jsonSkipOutput}
-            onChange={(e) => setJsonSkipOutput(e.target.value)}
+            value={jsonPostOutput}
+            onChange={(e) => setJsonPostOutput(e.target.value)}
             placeholder="Generated Postman script will appear here..."
           />
           <div className="button-stack">
@@ -303,8 +315,8 @@ const CodeGenerator = () => {
           <label className="modal-label">Skip Keys</label>
           <textarea
             rows={5}
-            value={jsonPostOutput}
-            onChange={(e) => setJsonPostOutput(e.target.value)}
+            value={jsonSkipOutput}
+            onChange={(e) => setJsonSkipOutput(e.target.value)}
             placeholder="Enter keys to skip with , as value ..."
             className="modal-textarea"
           />
