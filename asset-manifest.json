@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/code_generator/static/css/main.443575ca.css",
+    "main.js": "/code_generator/static/js/main.329b84ea.js",
+    "static/media/background3.jpg": "/code_generator/static/media/background3.2da859c535a6f3918452.jpg",
+    "static/media/background2.jpg": "/code_generator/static/media/background2.77596c1128a732a17811.jpg",
+    "static/media/oracle-logo.png": "/code_generator/static/media/oracle-logo.7414e874accf57dfbe64.png",
+    "index.html": "/code_generator/index.html",
+    "main.443575ca.css.map": "/code_generator/static/css/main.443575ca.css.map",
+    "main.329b84ea.js.map": "/code_generator/static/js/main.329b84ea.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.443575ca.css",
+    "static/js/main.329b84ea.js"
+  ]
+}
