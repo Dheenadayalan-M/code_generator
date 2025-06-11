@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import prettier from "prettier/standalone";
-import parserJson from "prettier/plugins/babel";
 
 const CodeGenerator = () => {
   const navigate = useNavigate();
   const [jsonInput, setJsonInput] = useState("");
   const [jsonMetaInput, setJsonMetaInput] = useState("");
   const [jsonPostOutput, setJsonPostOutput] = useState("");
-  const [jsonSkipOutput, setJsonSkipOutput] = useState("");
+  const [jsonSkipOutput, setJsonSkipOutput] = useState([
+      "accountNumber", "partyId", "externalRefNo", "counterParty", "contractRefNo", "branch", "currencyCode",
+      "makerId", "makerDtStamp", "makerRemarks", "checkerId", "checkerDtStamp", "checkerRemarks",
+      "branchCode", "brnCode", "brn", "arg", "information", "override", "overrideAuthLevelsReqd",
+      "error", "type", "language", "requestId", "httpStatusCode", "id", "iD", "args", "keyId"
+  ]);
   const [showModal, setShowModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState("");
-  let loopIndexCounter = 0;
+  //let loopIndexCounter = 0;
 
   const handleOpenPopup = () => {
-    setJsonSkipOutput(JSON.stringify(SKIP_KEYS));
+    //setJsonSkipOutput(JSON.stringify(SKIP_KEYS));
     setShowModal(true);
-    alert(JSON.stringify(SKIP_KEYS));
   }
 
   const handleClosePopup = () => {
@@ -51,12 +53,12 @@ const CodeGenerator = () => {
     }
   };
 
-  const SKIP_KEYS = new Set([
-      "accountNumber", "partyId", "externalRefNo", "counterParty", "contractRefNo", "branch", "currencyCode",
-      "makerId", "makerDtStamp", "makerRemarks", "checkerId", "checkerDtStamp", "checkerRemarks",
-      "branchCode", "brnCode", "brn", "arg", "information", "override", "overrideAuthLevelsReqd",
-      "error", "type", "language", "requestId", "httpStatusCode", "id", "iD", "args", "keyId"
-  ]);
+  // const SKIP_KEYS = [
+  //     "accountNumber", "partyId", "externalRefNo", "counterParty", "contractRefNo", "branch", "currencyCode",
+  //     "makerId", "makerDtStamp", "makerRemarks", "checkerId", "checkerDtStamp", "checkerRemarks",
+  //     "branchCode", "brnCode", "brn", "arg", "information", "override", "overrideAuthLevelsReqd",
+  //     "error", "type", "language", "requestId", "httpStatusCode", "id", "iD", "args", "keyId"
+  // ];
 
   // function getKeyPathString(path) {
   //   return path.join(".");
@@ -153,12 +155,16 @@ const CodeGenerator = () => {
     try {
       const inputJson = JSON.parse(jsonInput);
       const metadata = JSON.parse(jsonMetaInput); 
+      const skipKeys = JSON.parse(jsonSkipOutput);
+      alert(jsonSkipOutput);
+
       // code to generate script using python call
       var apiData = {
         "jsonInput" : JSON.stringify(inputJson),
-        "jsonMetaInput" : JSON.stringify(metadata)
+        "jsonMetaInput" : JSON.stringify(metadata),
+        "skipKeys" : JSON.stringify(skipKeys)
       }
-      const response = await fetch('http://127.0.0.1:5000/generateFromReact', {
+      const response = await fetch('http://127.0.0.1:5000/generateFromReacts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(apiData)
@@ -198,7 +204,7 @@ const CodeGenerator = () => {
       //   }
       // }
 
-      alert("✅ MetaData generated!");
+      alert("✅ Postman validation script generated!");
       setJsonPostOutput(result);
     } catch (err) {
       console.error("Failed to fetch metadata", err);
@@ -287,7 +293,7 @@ const CodeGenerator = () => {
           />
           <div className="button-stack">
             <button onClick={handleGeneratePostScript}>Generate Postman Script</button>
-            <button className="secondary" onClick={handleOpenPopup}>Upload Metadata</button>
+            <button className="secondary" onClick={handleOpenPopup}>Upload Metadata / Skip Keys</button>
           </div>
         </div>
 

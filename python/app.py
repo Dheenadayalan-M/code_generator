@@ -3,6 +3,7 @@
 from flask import Flask, request, render_template
 import json
 from assertion_generator import generate_postman_assertions_named_match_counter
+from assertion_generator_skip import generate_postman_assertions_named_match_counter_skip
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -23,6 +24,24 @@ def generateFromReact():
         print(input_json)
         print(metadata_json)
         output = generate_postman_assertions_named_match_counter(input_json, metadata_json)
+        return output
+    else:
+        return jsonify({"error": "Request must be JSON"}), 400
+        
+@app.route('/generateFromReacts', methods=['POST'])
+def generateFromReacts():
+    if request.is_json:
+        data = request.json
+        apiInput = data.get("jsonInput")
+        apiMeta = data.get("jsonMetaInput")
+        apiSkipKeys = data.get("skipKeys")
+        input_json = json.loads(apiInput)
+        metadata_json = json.loads(apiMeta)
+        skip_json = json.loads(apiSkipKeys)
+        print(input_json)
+        print(metadata_json)
+        print(skip_json)
+        output = generate_postman_assertions_named_match_counter_skip(input_json, metadata_json,skip_json)
         return output
     else:
         return jsonify({"error": "Request must be JSON"}), 400
