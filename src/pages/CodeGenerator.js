@@ -17,7 +17,6 @@ const CodeGenerator = () => {
   //let loopIndexCounter = 0;
 
   const handleOpenPopup = () => {
-    //setJsonSkipOutput(JSON.stringify(SKIP_KEYS));
     setShowModal(true);
   }
 
@@ -45,7 +44,7 @@ const CodeGenerator = () => {
     try {
       const jsonData = JSON.parse(jsonInput);
       const metadata2 = generateArrayMetadataPaths(jsonData);
-      var metadataText = "{\n" +Object.keys(metadata2).map(key => `"${key}": []`).join(',\n') + "}";
+      var metadataText = "{\n" +Object.keys(metadata2).map(key => `"${key}": []`).join(',\n') + "\n}";
       alert("✅ MetaData generated!");
       setJsonMetaInput(metadataText);
     } catch (err) {
@@ -155,16 +154,12 @@ const CodeGenerator = () => {
     try {
       const inputJson = JSON.parse(jsonInput);
       const metadata = JSON.parse(jsonMetaInput); 
-      const skipKeys = JSON.parse(jsonSkipOutput);
-      alert(jsonSkipOutput);
-
       // code to generate script using python call
       var apiData = {
         "jsonInput" : JSON.stringify(inputJson),
-        "jsonMetaInput" : JSON.stringify(metadata),
-        "skipKeys" : JSON.stringify(skipKeys)
+        "jsonMetaInput" : JSON.stringify(metadata)
       }
-      const response = await fetch('http://127.0.0.1:5000/generateFromReacts', {
+      const response = await fetch('http://127.0.0.1:5000/generateFromReact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(apiData)

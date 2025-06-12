@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 loop_index_counter = 0  # Global loop index counter
 
-def generate_postman_assertions_named_match_counter_skip(input_json: Dict, metadata: Dict, SKIP_KEYS: Obj) -> str:
+def generate_postman_assertions_named_match_counter_skip(input_json: Dict, metadata: Dict, SKIP_KEYS: Dict) -> str:
     def get_key_path_string(path: List[str]) -> str:
         return '.'.join(path)
 
